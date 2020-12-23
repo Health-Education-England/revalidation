@@ -8,11 +8,11 @@
 <ng-template #notSubmitting>
   <div
     class="table-container"
-    *ngIf="connectionHistory$ | async as connectionHistory"
+    *ngIf="programmeHistory$ | async as programmeHistory"
   >
     <table
       mat-table
-      [dataSource]="connectionHistory"
+      [dataSource]="programmeHistory"
       multiTemplateDataRows
       class="w-100"
     >
@@ -45,13 +45,85 @@
 
       <tr
         mat-header-row
-        *matHeaderRowDef="columnsToDisplay"
+        *matHeaderRowDef="programmeColumnsToDisplay"
+        [ngClass]="{ hide: programmeHistory?.length === 0 }"
+        class="element-row"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let element; columns: programmeColumnsToDisplay"
+        [class.highlight-row-warn]="element.connectionStatus === 'No'"
+        [class.highlight-row-success]="element.connectionStatus === 'Yes'"
+      ></tr>
+
+      <ng-container matColumnDef="noRecord">
+        <td colspan="12" mat-footer-cell class="centered" *matFooterCellDef>
+          <em class="icon-warn">No history available.</em>
+        </td>
+      </ng-container>
+      <tr
+        mat-footer-row
+        *matFooterRowDef="['noRecord']"
+        class="highlight-row-warn"
+        [ngClass]="{ hide: programmeHistory?.length > 0 }"
+      ></tr>
+    </table>
+  </div>
+
+  <div
+    class="table-container"
+    *ngIf="connectionHistory$ | async as connectionHistory"
+  >
+    <mat-card-title>Connection history</mat-card-title>
+    <table
+      mat-table
+      [dataSource]="connectionHistory"
+      multiTemplateDataRows
+      class="w-100"
+    >
+      <caption class="collapsed no-height">
+        Trainee historical connection details
+      </caption>
+      <ng-container matColumnDef="newDesignatedBodyCode">
+        <th mat-header-cell scope="col" *matHeaderCellDef>New DBC</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.newDesignatedBodyCode }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="previousDesignatedBodyCode">
+        <th mat-header-cell scope="col" *matHeaderCellDef>Old DBC</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.previousDesignatedBodyCode }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="requestType">
+        <th mat-header-cell scope="col" *matHeaderCellDef>Request type</th>
+        <td mat-cell *matCellDef="let element">{{ element.requestType }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="reasonMessage">
+        <th mat-header-cell scope="col" *matHeaderCellDef>Reason</th>
+        <td mat-cell *matCellDef="let element">{{ element.reasonMessage }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="dateFormat">
+        <th mat-header-cell scope="col" *matHeaderCellDef>Last updated</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.requestTime | date: dateFormat }}
+        </td>
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="connectionsColumnsToDisplay"
         [ngClass]="{ hide: connectionHistory?.length === 0 }"
         class="element-row"
       ></tr>
       <tr
         mat-row
-        *matRowDef="let element; columns: columnsToDisplay"
+        *matRowDef="let element; columns: connectionsColumnsToDisplay"
         [class.highlight-row-warn]="element.connectionStatus === 'No'"
         [class.highlight-row-success]="element.connectionStatus === 'Yes'"
       ></tr>
@@ -68,7 +140,6 @@
         [ngClass]="{ hide: connectionHistory?.length > 0 }"
       ></tr>
     </table>
-
     <app-update-connection
       *ngIf="enableUpdateConnection"
       (submittFormEvent)="updateConnection($event)"

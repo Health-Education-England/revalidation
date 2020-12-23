@@ -1,10 +1,10 @@
 import {
   IConnectionResponse,
-  IConnectionDetails,
+  IProgrammeDetails,
   IUserDBC
 } from "../connection.interfaces";
 
-const connection: IConnectionDetails = {
+const connection: IProgrammeDetails = {
   gmcNumber: 123456,
   forenames: "Babul",
   surname: "Yasa",
@@ -12,7 +12,7 @@ const connection: IConnectionDetails = {
   programmeMembershipType: "prg type1",
   programmeName: "prg name1",
   currentGrade: "GRADE",
-  connectionHistory: [
+  programmeHistory: [
     {
       programmeMembershipType: "prg type1",
       programmeName: "prg name1",

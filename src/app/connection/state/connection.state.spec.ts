@@ -50,12 +50,12 @@ describe("Connection actions", () => {
     expect(req.request.method).toEqual("GET");
     req.flush(mockConnectionResponse);
 
-    const connectionHistory = store.selectSnapshot(
-      (state) => state.connection.connectionHistory
+    const programmeHistory = store.selectSnapshot(
+      (state) => state.connection.programmeHistory
     );
 
-    expect(connectionHistory).toEqual(
-      mockConnectionResponse.connection.connectionHistory
+    expect(programmeHistory).toEqual(
+      mockConnectionResponse.connection.programmeHistory
     );
     httpMock.verify();
   }));

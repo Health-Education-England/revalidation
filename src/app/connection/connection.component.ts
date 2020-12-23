@@ -4,8 +4,9 @@ import { Observable, Subscription } from "rxjs";
 
 import { environment } from "@environment";
 import {
-  IConnectionHistory,
-  IUpdateConnectionResponse
+  IProgrammeHistory,
+  IUpdateConnectionResponse,
+  IConnectionHistory
 } from "./connection.interfaces";
 import { ConnectionState } from "./state/connection.state";
 import { AuthService } from "../core/auth/auth.service";
@@ -23,6 +24,9 @@ import { UpdateConnectionsService } from "../update-connections/services/update-
   styleUrls: ["./connection.component.scss"]
 })
 export class ConnectionComponent implements OnInit, OnDestroy {
+  @Select(ConnectionState.programmeHistory)
+  public programmeHistory$: Observable<IProgrammeHistory[]>;
+
   @Select(ConnectionState.connectionHistory)
   public connectionHistory$: Observable<IConnectionHistory[]>;
 
@@ -33,11 +37,18 @@ export class ConnectionComponent implements OnInit, OnDestroy {
   public doctorCurrentDbc$: Observable<string>;
 
   dateFormat = environment.dateFormat;
-  columnsToDisplay = [
+  programmeColumnsToDisplay = [
     "programmeName",
     "programmeOwner",
     "programmeMembershipStartDate",
     "programmeMembershipEndDate"
+  ];
+  connectionsColumnsToDisplay = [
+    "newDesignatedBodyCode",
+    "previousDesignatedBodyCode",
+    "requestType",
+    "reasonMessage",
+    "requestTime"
   ];
   componentSubscription: Subscription;
   dbcs: IDesignatedBody[] = [];
